@@ -1,0 +1,30 @@
+Setup things
+/scoreboard objectives add Money dummy Money
+/scoreboard objectives add MoneyDisplay dummy §aMoney
+
+
+
+Villager item Buy commands (change per item)
+/tell @initiator[scores={Money=..99}] §cNot enough money§f
+/playsound mob.villager.no @initiator[scores={Money=..99}]
+/give @initiator[scores={Money=100..}] iron_ingot 10
+/tell @initiator[scores={Money=100..}] §a10 iron recieved§f
+/playsound mob.villager.yes @initiator[scores={Money=100..}]
+/scoreboard players remove @initiator[scores={Money=100..}] Money 100
+
+
+Villager item sell command
+/tell @initiator[hasitem={item=iron_ingot,quantity=..9}] §cNot enough Iron§f
+/playsound mob.villager.no @initiator[hasitem={item=iron_ingot,quantity=..9}]
+/scoreboard players add @initiator[hasitem={item=iron_ingot,quantity=10..}] Money 100
+/playsound mob.villager.yes @initiator[hasitem={item=iron_ingot,quantity=10..}]
+/tell @initiator[hasitem={item=iron_ingot,quantity=10..}] §a10 iron sold§f
+/clear @initiator[hasitem={item=iron_ingot,quantity=10..}] iron_ingot 0 10
+
+
+
+test
+/tell @initiator[hasitem={item=iron_ingot,quanity=..9}] §cNot enough Iron§f
+/tell @initiator[hasitem={item=iron_ingot,quanity=10..}] §a10 iron sold§f
+
+/tell @a[hasitem={item=iron_ingot,quantity=10..}] §a10 iron sold§f
