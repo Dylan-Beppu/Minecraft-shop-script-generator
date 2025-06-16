@@ -15,7 +15,7 @@ std::string SCOREBOARD_VALUE = "Money";
 std::string ERROR_COLOR = "§c";
 std::string SUCCESS_VALUE = "§a";
 std::string ERROR_SOUND = "mob.villager.no";
-std::string SUCCESS_SOUND = "";
+std::string SUCCESS_SOUND = "mob.villager.yes";
 
 
 std::string BuyItem(std::string array[4]);
@@ -60,12 +60,12 @@ int main(int argc, char* argv[]) {
 	
 	
 	while (std::getline(csvFile, line)) {	
-		
 		// Split the line by commas into a array
 		std::string array[4];
 		std::string currSub;
 		size_t commasFound = 0;
 
+		//Separate everything by comma
 		for(size_t i = 0; i < line.length(); i++) {	
 			if (line[i] == ',') {
 				array[commasFound] = currSub;
@@ -85,12 +85,7 @@ int main(int argc, char* argv[]) {
 		array[commasFound] = currSub;
 	
 
-
-		for(size_t i = 0; i < 4; i++) {
-			std::cout << array[i] << std::endl;
-		}
-
-
+		// Check if the action type is valid
 		if (array[1] == "buy") {
 			scriptFile << BuyItem(array);
 		
@@ -109,8 +104,6 @@ int main(int argc, char* argv[]) {
 	// Close the script file
 	scriptFile.close();
     csvFile.close();
-
-
 
     return 0;
 }
