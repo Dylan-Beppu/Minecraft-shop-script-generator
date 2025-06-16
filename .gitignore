@@ -1,4 +1,6 @@
 /.vscode
-/list.csv
-/main.exe
-/script.txt
+*.exe
+*.o
+*.out
+*.csv
+*.txt

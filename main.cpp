@@ -14,6 +14,8 @@
 std::string SCOREBOARD_VALUE = "Money";
 std::string ERROR_COLOR = "§c";
 std::string SUCCESS_VALUE = "§a";
+std::string ERROR_SOUND = "mob.villager.no";
+std::string SUCCESS_SOUND = "";
 
 
 std::string BuyItem(std::string array[4]);
@@ -91,6 +93,12 @@ int main(int argc, char* argv[]) {
 
 		if (array[1] == "buy") {
 			scriptFile << BuyItem(array);
+		
+		} else if (array[1] == "sell") {
+			scriptFile << SellItem(array);
+
+		} else {
+			std::cerr << "Invalid action type on item: " << array[0] << std::endl;
 		}
 
 
@@ -108,27 +116,42 @@ int main(int argc, char* argv[]) {
 }
 
 
-
-std::string BuyItem(std::string array[4]) {
+/**
+ * Converts the input array to a sell script for a NPC
+ * 
+ * @param Array A string array with the format {item name, action type, cost, amount}
+ * @return The script generated
+ */
+std::string SellItem(std::string array[4]) {
 	std::stringstream retStream;
 	int lowVal = std::stoi(array[2]) - 1;
-	retStream << "\t" << array[0] << " - Buy" << std::endl;
-	retStream <<  "/tell @initiator[scores={" << SCOREBOARD_VALUE << "=.." << lowVal << "}] " << ERROR_COLOR << "Not enough " << SCOREBOARD_VALUE << "§f" << std::endl;
-// 	"/tell @initiator[scores={Money=..99}] §cNot enough money§f
-	retStream <<  "/playsound mob.villager.no @initiator[scores={" << SCOREBOARD_VALUE << "=.." << lowVal << "}]"<< std::endl;
 
-// 	/playsound mob.villager.no @initiator[scores={Money=..99}]
-	retStream <<  "/give @initiator[scores={" << SCOREBOARD_VALUE << "=" << array[2] << "}] " <<  array[0] <<  " " << array[3] << std::endl;
+	//Header for the script
+	retStream << "\t" << array[0] << " - Sell" << std::endl;
 
-// /give @initiator[scores={Money=100..}] iron_ingot 10
+	//Put error message if not enough curreny
+	retStream <<  "/tell @initiator[scores={" << SCOREBOARD_VALUE << "=.." << lowVal << "}] " 
+		<< ERROR_COLOR << "Not enough " << SCOREBOARD_VALUE << "§f" << std::endl;
+	
+	//Play error sound if not enough currency for player to buy item
+	retStream <<  "/playsound " << ERROR_SOUND << " @initiator[scores={" << SCOREBOARD_VALUE 
+		<< "=.." << lowVal << "}]"<< std::endl;
 
-	retStream <<  "/tell @initiator[scores={" << SCOREBOARD_VALUE << "=" << array[0] << "..}] " << SUCCESS_VALUE << array[3] << " " << array[0] << " recieved§f" << std::endl;
+	//Give the player the item being sold
+	retStream <<  "/give @initiator[scores={" << SCOREBOARD_VALUE << "=" << array[2] << "}] "
+		<<  array[0] <<  " " << array[3] << std::endl;
+	
+	//Tell the player that they bought the item
+	retStream <<  "/tell @initiator[scores={" << SCOREBOARD_VALUE << "=" << array[0] << "..}] "
+		<< SUCCESS_VALUE << array[3] << " " << array[0] << " recieved§f" << std::endl;
 
-// /tell @initiator[scores={Money=100..}] §a10 iron recieved§f
-// /playsound mob.villager.yes @initiator[scores={Money=100..}]
-	retStream <<  "/playsound mob.villager.yes @initiator[scores={" << SCOREBOARD_VALUE << "=" << array[2] << "..}]" << std::endl;
-// /scoreboard players remove @initiator[scores={Money=100..}] Money 100"
-		retStream <<  "/scoreboard players remove @initiator[scores={" << SCOREBOARD_VALUE << "=" << array[2] << "..}] " << SCOREBOARD_VALUE << " " << array[2] << std::endl;
+	//Play sound if sale is sucscssfull
+	retStream <<  "/playsound " << SUCCESS_SOUND << " @initiator[scores={" << SCOREBOARD_VALUE
+		<< "=" << array[2] << "..}]" << std::endl;
+
+	//Remove the sale cost from the player
+	retStream <<  "/scoreboard players remove @initiator[scores={" << SCOREBOARD_VALUE << "="
+		<< array[2] << "..}] " << SCOREBOARD_VALUE << " " << array[2] << std::endl;
 
 	retStream << std::endl << std::endl;
 	return retStream.str();
@@ -136,13 +159,52 @@ std::string BuyItem(std::string array[4]) {
 }
 
 
-//TODO: do this part
-std::string SellItem(std::string array[4]) {
-	std::string retStr = "";
 
-	return retStr;
+// item, buy/sell, cost, quantity
+
+/**
+ * Converts the input array to a buy script for a NPC
+ * 
+ * @param Array A string array with the format {item name, action type, cost, amount}
+ * @return The script generated
+ */
+std::string BuyItem(std::string array[4]) {
+	std::stringstream retStream;
+	int lowQuantity = std::stoi(array[3]) - 1;
+
+	//Header for the script
+	retStream << "\t" << array[0] << " - Buy" << std::endl;
+
+	//Put error message if not enough of an item
+	retStream << "/tell @initiator[hasitem={item=" << array[0] << ",quantity=.." << lowQuantity << "=.."
+		<< lowQuantity << "}] " << ERROR_COLOR << "Not enough " << array[0] << "§f" << std::endl;
+
+	//Play sound if not enough of an item
+	retStream << "/playsound "<< ERROR_SOUND << " @initiator[hasitem={item=" << array[0] 
+		<< ",quantity=.." << lowQuantity << "}]" << std::endl;
+
+	//Add money to player if enough item to sell
+	retStream << "/scoreboard players add @initiator[hasitem={item=" << array[0] << ",quantity="
+		<< array[3] << "..}] " << SCOREBOARD_VALUE << " " << array[3] << std::endl;
+
+	//Play sound if enough items to sell
+	retStream << "/playsound " << SUCCESS_SOUND << " @initiator[hasitem={item=" << array[0]
+		<< ",quantity=" << array[3] << "..}]" << std::endl;
+
+	//Put message that item has been sold
+	retStream << "/tell @initiator[hasitem={item=" << array[0] << ",quantity=" << array[3]
+		<< "..}] " << SUCCESS_VALUE << array[3] << " " << array[0] << "§f" << std::endl;
+
+	//Remove the item from the players inventory
+	retStream << "/clear @initiator[hasitem={item=" << array[0] << ",quantity=" << array[3]
+		<< "..}] " << array[0] << " " << array[3] << std::endl;
+
+	//New lines to separate this script from the next script
+	retStream << std::endl << std::endl;
+
+
+	return retStream.str();
 }
-
 
 
 
