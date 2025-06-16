@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 
 	//Open the output file in write mode
     std::ofstream scriptFile;
-	scriptFile.open("script.txt");
+	scriptFile.open(scriptOutputName);
 
 	//Error checking
 	if (!scriptFile.is_open()) {
