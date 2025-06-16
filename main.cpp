@@ -13,7 +13,7 @@
 
 std::string SCOREBOARD_VALUE = "Money";
 std::string ERROR_COLOR = "§c";
-std::string SUCCESS_VALUE = "§a";
+std::string SUCCESS_COLOR = "§a";
 std::string ERROR_SOUND = "mob.villager.no";
 std::string SUCCESS_SOUND = "mob.villager.yes";
 
@@ -136,7 +136,7 @@ std::string SellItem(std::string array[4]) {
 	
 	//Tell the player that they bought the item
 	retStream <<  "/tell @initiator[scores={" << SCOREBOARD_VALUE << "=" << array[0] << "..}] "
-		<< SUCCESS_VALUE << array[3] << " " << array[0] << " recieved§f" << std::endl;
+		<< SUCCESS_COLOR << array[3] << " " << array[0] << " recieved§f" << std::endl;
 
 	//Play sound if sale is sucscssfull
 	retStream <<  "/playsound " << SUCCESS_SOUND << " @initiator[scores={" << SCOREBOARD_VALUE
@@ -186,7 +186,7 @@ std::string BuyItem(std::string array[4]) {
 
 	//Put message that item has been sold
 	retStream << "/tell @initiator[hasitem={item=" << array[0] << ",quantity=" << array[3]
-		<< "..}] " << SUCCESS_VALUE << array[3] << " " << array[0] << "§f" << std::endl;
+		<< "..}] " << SUCCESS_COLOR << array[3] << " " << array[0] << "§f" << std::endl;
 
 	//Remove the item from the players inventory
 	retStream << "/clear @initiator[hasitem={item=" << array[0] << ",quantity=" << array[3]
