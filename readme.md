@@ -25,6 +25,10 @@ To use this program, run in command prompt where the executable is located:
 ```
 ./CSVtoScript <File name here>
 ```
+This will output a file that ends in *_script.txt
+> The full file name will show in terminal.
+
+
 ### CSV file setup
 
 The csv is formatted as fallows
