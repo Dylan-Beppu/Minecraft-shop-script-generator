@@ -15,7 +15,7 @@ Based on Youtube user [gabedala](https://www.youtube.com/@gabedala) tutorials on
 ### How to compile
 
 1. Make sure that gcc is installed
-2. Go to the root directery of this repo clone
+2. Go to the root directory of this repo clone
 3. Open command prompt in this directory
 4. Run ``g++ main.cpp -o CSVtoScript`` in the command prompt
 
@@ -50,7 +50,7 @@ iron_ingot, sell, 10, 100
 ### Advanced setup (or need to change things)
 There are several global variables located at the top of the main.cpp file that can be changed to configure the program to a new state.
 
-* SCOREBOARD_VALUE - Scoreboard vlaue that is use as the currency.
+* SCOREBOARD_VALUE - Scoreboard value that is use as the currency.
 * ERROR_COLOR - Color of the error text.
 * SUCCESS_COLOR - Color of the success text.
 * ERROR_SOUND - Minecraft sound that is used as the error sound
