@@ -23,32 +23,39 @@ std::string SellItem(std::string array[4]);
 
 
 int main(int argc, char* argv[]) {
-    // if (argc != 2) {
-    //     std::cerr << "Usage: " << argv[0] << " <argument>" << std::endl;
-    //     return 1;
-    // }
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <argument>" << std::endl;
+        return 1;
+    }
 
-    // std::string argument = argv[1];
-    // std::cout << "Argument received: " << argument << std::endl;
-	//TODO: strip file extention and formate it as *_script.txt
-
-	//TODO: remove for deployment
-	std::string shopName = "list.csv";
+    std::string shopName = argv[1];
+    std::string scriptOutputName =  shopName;
 
 
-	// Open the file in read mode
+
+	//Strip the file extion if it exists
+	int fileExtentionStart = shopName.rfind('.');
+	if (fileExtentionStart != -1) {
+		scriptOutputName = shopName.substr(0, fileExtentionStart);
+	}
+	scriptOutputName += "_script.txt";
+
+
+	//Open the input file in read mode
     std::ifstream csvFile;
-
 	csvFile.open(shopName);
 
+	//Error checking
     if (!csvFile.is_open()) {
         std::cerr << "Error: Could not open file: " << shopName << std::endl;
         return 1;
     }
 
+	//Open the output file in write mode
     std::ofstream scriptFile;
 	scriptFile.open("script.txt");
 
+	//Error checking
 	if (!scriptFile.is_open()) {
 		std::cerr << "Error: Could not create file: shop.csv" << std::endl;
 		return 1;
@@ -104,6 +111,8 @@ int main(int argc, char* argv[]) {
 	// Close the script file
 	scriptFile.close();
     csvFile.close();
+
+	std::cout << "Script file saved as: " << scriptOutputName << std::endl;
 
     return 0;
 }
